@@ -1,3 +1,3 @@
 # basin-swift
 
-A description of this package.
+Swift package to work with Basin smart contracts.
