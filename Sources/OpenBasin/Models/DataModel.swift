@@ -13,5 +13,5 @@ struct DataModel: Codable {
     let provider: String
     let standard: Int
     let timestamp: Date
-    let payload: String
+    let payload: Data
 }

@@ -18,7 +18,7 @@ struct MinterService {
 
     }
 
-    func schemas(_ completion: @escaping (OBResult<[String]>) -> Void) {
+    func schemas(_ completion: @escaping (OBResult<Data>) -> Void) {
 
     }
 }

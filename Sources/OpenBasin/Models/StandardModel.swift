@@ -11,5 +11,5 @@ struct StandardModel: Codable {
     let token: Int
     let minter: String
     let name: Int
-    let schema: Date
+    let schema: Data
 }

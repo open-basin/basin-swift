@@ -26,7 +26,7 @@ struct OwnerService {
 
     }
 
-    func payloads(_ completion: @escaping (OBResult<[String]>) -> Void) {
+    func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
 
     }
 }
@@ -47,7 +47,7 @@ extension OwnerService {
 
         }
 
-        func payloads(_ completion: @escaping (OBResult<[String]>) -> Void) {
+        func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
 
         }
     }
@@ -62,12 +62,22 @@ extension OwnerService {
             self.owner = owner
         }
 
-        func data(_ completion: @escaping (OBResult<[Int: DataModel]>) -> Void) {
+        func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
 
         }
 
-        func payloads(_ completion: @escaping (OBResult<[Int: String]>) -> Void) {
+        func payloads(_ completion: @escaping (OBResult<[PayloadsResponse]>) -> Void) {
 
+        }
+
+        struct DataResponse {
+            let standard: Int
+            let data: DataModel
+        }
+
+        struct PayloadsResponse {
+            let standard: Int
+            let payload: Data
         }
     }
 }
@@ -87,12 +97,22 @@ struct OwnersService {
         StandardsOwnersService(tokens: tokens, owners: addresses)
     }
 
-    func data(_ completion: @escaping (OBResult<[String: DataModel]>) -> Void) {
+    func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
 
     }
 
-    func payloads(_ completion: @escaping (OBResult<[String: String]>) -> Void) {
+    func payloads(_ completion: @escaping (OBResult<[PayloadsResponse]>) -> Void) {
 
+    }
+
+    struct DataResponse {
+        let address: String
+        let data: DataModel
+    }
+
+    struct PayloadsResponse {
+        let address: String
+        let payload: Data
     }
 }
 
@@ -112,7 +132,7 @@ extension OwnersService {
 
         }
 
-        func payloads(_ completion: @escaping (OBResult<[String]>) -> Void) {
+        func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
 
         }
     }
@@ -127,12 +147,24 @@ extension OwnersService {
             self.owners = owners
         }
 
-        func data(_ completion: @escaping (OBResult<[String: [Int: DataModel]]>) -> Void) {
+        func data(_ completion: @escaping (OBResult<[DataOwnerResponse]>) -> Void) {
 
         }
 
-        func payloads(_ completion: @escaping (OBResult<[String: [Int: String]]>) -> Void) {
+        func payloads(_ completion: @escaping (OBResult<[PayloadsOwnerResponse]>) -> Void) {
 
+        }
+
+        struct DataOwnerResponse {
+            let owner: String
+            let standard: Int
+            let data: DataModel
+        }
+
+        struct PayloadsOwnerResponse {
+            let owner: String
+            let standard: Int
+            let payload: Data
         }
     }
 }

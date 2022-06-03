@@ -57,6 +57,17 @@ struct RemoteService {
         }
     }
 
+    func fetch(path: String, queryItems: [URLQueryItem], _ completion: @escaping (OBResult<Data>) -> Void) {
+        request(path: path, queryItems: queryItems) { result in
+            switch result {
+            case .success(let data):
+                completion(.success(data))
+            case .error(let error):
+                completion(.error(error))
+            }
+        }
+    }
+
     private func request(path: String, queryItems: [URLQueryItem], _ completion: @escaping (OBResult<Data>) -> Void) {
         guard let baseComponents = baseComponents else {
             return
@@ -75,9 +86,5 @@ struct RemoteService {
         }
 
         task.resume()
-    }
-
-    func environmentCheckpoint() -> Bool {
-        return Environment.shared != nil
     }
 }

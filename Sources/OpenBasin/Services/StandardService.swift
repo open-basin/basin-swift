@@ -9,6 +9,7 @@ import Foundation
 
 struct StandardService {
     private let token: Int
+    private let remote = RemoteService()
 
     init(token: Int) {
         self.token = token
@@ -18,7 +19,7 @@ struct StandardService {
 
     }
 
-    func schema(_ completion: @escaping (OBResult<String>) -> Void) {
+    func schema(_ completion: @escaping (OBResult<Data>) -> Void) {
 
     }
 
@@ -26,7 +27,7 @@ struct StandardService {
 
     }
 
-    func payloads(_ completion: @escaping (OBResult<[String]>) -> Void) {
+    func payloads(_ completion: @escaping (OBResult<[Data]>) -> Void) {
 
     }
 }
@@ -38,20 +39,40 @@ struct StandardsService {
         self.tokens = tokens
     }
 
-    func fetch(_ completion: @escaping (OBResult<[Int: StandardModel]>) -> Void) {
+    func fetch(_ completion: @escaping (OBResult<[StandardResponse]>) -> Void) {
 
     }
 
-    func schemas(_ completion: @escaping (OBResult<[Int: String]>) -> Void) {
+    func schemas(_ completion: @escaping (OBResult<[SchemaResponse]>) -> Void) {
 
     }
 
-    func data(_ completion: @escaping (OBResult<[Int: DataModel]>) -> Void) {
+    func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
 
     }
 
-    func payloads(_ completion: @escaping (OBResult<[Int: DataModel]>) -> Void) {
+    func payloads(_ completion: @escaping (OBResult<[PayloadResponse]>) -> Void) {
 
+    }
+
+    struct StandardResponse {
+        let standard: Int
+        let Standard: StandardModel
+    }
+
+    struct SchemaResponse {
+        let standard: Int
+        let schema: Data
+    }
+
+    struct DataResponse {
+        let standard: Int
+        let data: DataModel
+    }
+
+    struct PayloadResponse {
+        let standard: Int
+        let payload: Data
     }
 }
 
@@ -64,7 +85,7 @@ struct AllStandardsService {
 
         }
 
-        func schemas(_ completion: @escaping (OBResult<[String]>) -> Void) {
+        func schemas(_ completion: @escaping (OBResult<[Data]>) -> Void) {
 
         }
     }

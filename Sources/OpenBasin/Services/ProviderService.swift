@@ -18,7 +18,7 @@ struct ProviderService {
 
     }
 
-    func payloads(_ completion: @escaping (OBResult<[String]>) -> Void) {
+    func payloads(_ completion: @escaping (OBResult<[Data]>) -> Void) {
 
     }
 }

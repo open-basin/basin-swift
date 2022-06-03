@@ -14,11 +14,11 @@ struct DataService {
         self.token = token
     }
 
-    func fetch(_ completion: @escaping (OBResult<String>) -> Void) {
+    func fetch(_ completion: @escaping (OBResult<Data>) -> Void) {
         
     }
 
-    func payload(_ completion: @escaping (OBResult<String>) -> Void) {
+    func payload(_ completion: @escaping (OBResult<Data>) -> Void) {
 
     }
 }
@@ -30,11 +30,22 @@ struct DatasService {
         self.tokens = tokens
     }
 
-    func fetch(_ completion: @escaping (OBResult<[Int: DataModel]>) -> Void) {
+    func fetch(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
 
     }
 
-    func payloads(_ completion: @escaping (OBResult<[Int: String]>) -> Void) {
+    func payloads(_ completion: @escaping (OBResult<[PayloadResponse]>) -> Void) {
 
+    }
+
+
+    struct DataResponse {
+        let token: Int
+        let data: DataModel
+    }
+
+    struct PayloadResponse {
+        let token: Int
+        let payload: Data
     }
 }
