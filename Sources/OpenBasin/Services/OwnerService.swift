@@ -7,20 +7,27 @@
 
 import Foundation
 
-struct OwnerService {
+struct OwnerService: AsyncService {
+    var thread: DispatchQueue?
     private let address: String
     private let remote = RemoteService.shared
 
-    init(address: String) {
+    init(address: String,
+         thread: DispatchQueue? = nil) {
         self.address = address
+        self.thread = thread
+    }
+
+    func receive(on thread: DispatchQueue) -> Self {
+        OwnerService(address: address, thread: thread)
     }
 
     func standard(_ token: Int) -> StandardOwnerService {
-        StandardOwnerService(token: token, owner: address)
+        StandardOwnerService(token: token, owner: address, thread: thread)
     }
 
     func standards(_ tokens: Set<Int>) -> StandardsOwnerService {
-        StandardsOwnerService(tokens: tokens, owner: address)
+        StandardsOwnerService(tokens: tokens, owner: address, thread: thread)
     }
 
     func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
@@ -31,7 +38,13 @@ struct OwnerService {
                         .init(name: "address", value: address)
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 
@@ -42,22 +55,35 @@ struct OwnerService {
                         .init(name: "address", value: address)
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 }
 
 extension OwnerService {
 
-    struct StandardOwnerService {
+    struct StandardOwnerService: AsyncService {
+        var thread: DispatchQueue?
         private let token: Int
         private let owner: String
         private let remote = RemoteService.shared
 
         init(token: Int,
-             owner: String) {
+             owner: String,
+             thread: DispatchQueue? = nil) {
             self.token = token
             self.owner = owner
+            self.thread = thread
+        }
+
+        func receive(on thread: DispatchQueue) -> Self {
+            StandardOwnerService(token: token, owner: owner, thread: thread)
         }
 
         func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
@@ -69,7 +95,13 @@ extension OwnerService {
                             .init(name: "standard", value: String(token))
                          ])
             { result in
-                completion(result)
+                if let thread = thread {
+                    thread.async {
+                        completion(result)
+                    }
+                } else {
+                    completion(result)
+                }
             }
         }
 
@@ -81,20 +113,33 @@ extension OwnerService {
                             .init(name: "standard", value: String(token))
                          ])
             { result in
-                completion(result)
+                if let thread = thread {
+                    thread.async {
+                        completion(result)
+                    }
+                } else {
+                    completion(result)
+                }
             }
         }
     }
 
-    struct StandardsOwnerService {
+    struct StandardsOwnerService: AsyncService {
+        var thread: DispatchQueue?
         private let tokens: Set<Int>
         private let owner: String
         private let remote = RemoteService.shared
 
         init(tokens: Set<Int>,
-             owner: String) {
+             owner: String,
+             thread: DispatchQueue? = nil) {
             self.tokens = tokens
             self.owner = owner
+            self.thread = thread
+        }
+
+        func receive(on thread: DispatchQueue) -> Self {
+            StandardsOwnerService(tokens: tokens, owner: owner, thread: thread)
         }
 
         func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
@@ -117,20 +162,27 @@ extension OwnerService {
     }
 }
 
-struct OwnersService {
+struct OwnersService: AsyncService {
+    var thread: DispatchQueue?
     private let addresses: Set<String>
     private let remote = RemoteService.shared
 
-    init(addresses: Set<String>) {
+    init(addresses: Set<String>,
+         thread: DispatchQueue? = nil) {
         self.addresses = addresses
+        self.thread = thread
+    }
+
+    func receive(on thread: DispatchQueue) -> Self {
+        OwnersService(addresses: addresses, thread: thread)
     }
 
     func standard(_ token: Int) -> StandardOwnersService {
-        StandardOwnersService(token: token, owners: addresses)
+        StandardOwnersService(token: token, owners: addresses, thread: thread)
     }
 
     func standards(_ tokens: Set<Int>) -> StandardsOwnersService {
-        StandardsOwnersService(tokens: tokens, owners: addresses)
+        StandardsOwnersService(tokens: tokens, owners: addresses, thread: thread)
     }
 
     func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
@@ -154,15 +206,22 @@ struct OwnersService {
 
 extension OwnersService {
 
-    struct StandardOwnersService {
+    struct StandardOwnersService: AsyncService {
+        var thread: DispatchQueue?
         private let token: Int
         private let owners: Set<String>
         private let remote = RemoteService.shared
 
         init(token: Int,
-             owners: Set<String>) {
+             owners: Set<String>,
+             thread: DispatchQueue? = nil) {
             self.token = token
             self.owners = owners
+            self.thread = thread
+        }
+
+        func receive(on thread: DispatchQueue) -> Self {
+            StandardOwnersService(token: token, owners: owners, thread: thread)
         }
 
         func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
@@ -174,15 +233,22 @@ extension OwnersService {
         }
     }
 
-    struct StandardsOwnersService {
+    struct StandardsOwnersService: AsyncService {
+        var thread: DispatchQueue?
         private let tokens: Set<Int>
         private let owners: Set<String>
         private let remote = RemoteService.shared
         
         init(tokens: Set<Int>,
-             owners: Set<String>) {
+             owners: Set<String>,
+             thread: DispatchQueue? = nil) {
             self.tokens = tokens
             self.owners = owners
+            self.thread = thread
+        }
+
+        func receive(on thread: DispatchQueue) -> Self {
+            StandardsOwnersService(tokens: tokens, owners: owners, thread: thread)
         }
 
         func data(_ completion: @escaping (OBResult<[DataOwnerResponse]>) -> Void) {

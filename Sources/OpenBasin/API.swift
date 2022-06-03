@@ -12,6 +12,7 @@ public struct Datastore {
 }
 
 struct Services {
+
     static func owner(_ address: String) -> OwnerService {
         OwnerService(address: address)
     }

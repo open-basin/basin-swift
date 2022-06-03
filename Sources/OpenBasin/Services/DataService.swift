@@ -7,12 +7,19 @@
 
 import Foundation
 
-struct DataService {
+struct DataService: AsyncService {
+    var thread: DispatchQueue?
     private let token: Int
     private let remote = RemoteService.shared
 
-    init(token: Int) {
+    init(token: Int,
+         thread: DispatchQueue? = nil) {
         self.token = token
+        self.thread = thread
+    }
+
+    func receive(on thread: DispatchQueue) -> Self {
+        DataService(token: token, thread: thread)
     }
 
     func fetch(_ completion: @escaping (OBResult<DataModel>) -> Void) {
@@ -23,7 +30,13 @@ struct DataService {
                         .init(name: "token", value: String(token))
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 
@@ -34,17 +47,30 @@ struct DataService {
                         .init(name: "token", value: String(token))
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 }
 
-struct DatasService {
+struct DatasService: AsyncService {
+    var thread: DispatchQueue?
     private let tokens: Set<Int>
     private let remote = RemoteService.shared
 
-    init(tokens: Set<Int>) {
+    init(tokens: Set<Int>,
+         thread: DispatchQueue? = nil) {
         self.tokens = tokens
+        self.thread = thread
+    }
+
+    func receive(on thread: DispatchQueue) -> Self {
+        DatasService(tokens: tokens, thread: thread)
     }
 
     func fetch(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {

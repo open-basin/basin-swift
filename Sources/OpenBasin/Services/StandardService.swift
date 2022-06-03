@@ -7,12 +7,19 @@
 
 import Foundation
 
-struct StandardService {
+struct StandardService: AsyncService {
+    var thread: DispatchQueue?
     private let token: Int
     private let remote = RemoteService.shared
 
-    init(token: Int) {
+    init(token: Int,
+         thread: DispatchQueue? = nil) {
         self.token = token
+        self.thread = thread
+    }
+
+    func receive(on thread: DispatchQueue) -> Self {
+        StandardService(token: token, thread: thread)
     }
 
     func fetch(_ completion: @escaping (OBResult<StandardModel>) -> Void) {
@@ -22,7 +29,13 @@ struct StandardService {
                         .init(name: "token", value: String(token))
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 
@@ -32,7 +45,13 @@ struct StandardService {
                         .init(name: "token", value: String(token))
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 
@@ -44,7 +63,13 @@ struct StandardService {
                         .init(name: "token", value: String(token))
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 
@@ -54,17 +79,30 @@ struct StandardService {
                         .init(name: "token", value: String(token))
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 }
 
-struct StandardsService {
+struct StandardsService: AsyncService {
+    var thread: DispatchQueue?
     private let tokens: Set<Int>
     private let remote = RemoteService.shared
 
-    init(tokens: Set<Int>) {
+    init(tokens: Set<Int>,
+         thread: DispatchQueue? = nil) {
         self.tokens = tokens
+        self.thread = thread
+    }
+
+    func receive(on thread: DispatchQueue) -> Self {
+        StandardsService(tokens: tokens, thread: thread)
     }
 
     func fetch(_ completion: @escaping (OBResult<[StandardResponse]>) -> Void) {
@@ -104,11 +142,34 @@ struct StandardsService {
     }
 }
 
-struct AllStandardsService {
-    let all = AllStandards()
+struct AllStandardsService: AsyncService {
+    let thread: DispatchQueue?
     private let remote = RemoteService.shared
 
-    struct AllStandards {
+    var all: AllStandards {
+        AllStandards(thread: self.thread)
+    }
+
+    init(thread: DispatchQueue? = nil) {
+        self.thread = thread
+    }
+
+    func receive(on thread: DispatchQueue) -> Self {
+        AllStandardsService(thread: thread)
+    }
+
+    struct AllStandards: AsyncService {
+        let thread: DispatchQueue?
+        private let remote = RemoteService.shared
+
+        init(thread: DispatchQueue? = nil) {
+            self.thread = thread
+        }
+
+        func receive(on thread: DispatchQueue) -> Self {
+            AllStandards(thread: thread)
+        }
+
         func fetch(_ completion: @escaping (OBResult<[StandardModel]>) -> Void) {
 
         }

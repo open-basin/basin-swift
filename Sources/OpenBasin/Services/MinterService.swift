@@ -7,12 +7,18 @@
 
 import Foundation
 
-struct MinterService {
+struct MinterService: AsyncService {
+    var thread: DispatchQueue?
     private let address: String
     private let remote = RemoteService.shared
 
-    init(address: String) {
+    init(address: String,
+         thread: DispatchQueue? = nil) {
         self.address = address
+    }
+
+    func receive(on thread: DispatchQueue) -> Self {
+        MinterService(address: address, thread: thread)
     }
 
     func standards(_ completion: @escaping (OBResult<[StandardModel]>) -> Void) {
@@ -23,7 +29,13 @@ struct MinterService {
                         .init(name: "address", value: address)
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 
@@ -34,7 +46,13 @@ struct MinterService {
                         .init(name: "address", value: address)
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 }

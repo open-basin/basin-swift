@@ -7,12 +7,19 @@
 
 import Foundation
 
-struct ProviderService {
+struct ProviderService: AsyncService {
+    var thread: DispatchQueue?
     private let address: String
     private let remote = RemoteService.shared
 
-    init(address: String) {
+    init(address: String,
+         thread: DispatchQueue? = nil) {
         self.address = address
+        self.thread = thread
+    }
+
+    func receive(on thread: DispatchQueue) -> Self {
+        ProviderService(address: address, thread: thread)
     }
 
     func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
@@ -23,7 +30,13 @@ struct ProviderService {
                         .init(name: "address", value: address)
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
     }
 
@@ -34,8 +47,13 @@ struct ProviderService {
                         .init(name: "address", value: address)
                      ])
         { result in
-            completion(result)
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
         }
-
     }
 }
