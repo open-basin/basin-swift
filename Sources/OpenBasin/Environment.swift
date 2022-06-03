@@ -21,6 +21,6 @@ enum Chain {
 }
 
 enum AppEngine: String {
-    case rinkeby = "https://www.api.rinkeby.openbasin.io"
-    case mainnet = "https://www.api.openbasin.io"
+    case rinkeby = "api.rinkeby.openbasin.io"
+    case mainnet = "api.openbasin.io"
 }

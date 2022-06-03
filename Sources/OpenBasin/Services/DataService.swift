@@ -15,7 +15,7 @@ struct DataService {
     }
 
     func fetch(_ completion: @escaping (OBResult<String>) -> Void) {
-
+        
     }
 
     func payload(_ completion: @escaping (OBResult<String>) -> Void) {
