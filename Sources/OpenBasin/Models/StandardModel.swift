@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct StandardModel: Codable {
+struct StandardModel: DatastoreModel {
     let token: Int
     let minter: String
     let name: Int

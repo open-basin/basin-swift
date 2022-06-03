@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DataModel: Codable {
+struct DataModel: DatastoreModel {
     let token: Int
     let owner: String
     let provider: String

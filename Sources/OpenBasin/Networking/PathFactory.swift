@@ -10,7 +10,7 @@ import Foundation
 
 
 enum Path {
-    enum DataStore {
+    enum Datastore {
         enum Owner: String {
             case data = "datastore/owner/data"
             case payloads = "datastore/owner/payloads"
@@ -30,7 +30,7 @@ enum Path {
             case standard = "datastore/standards/standard"
             case schema = "datastore/standards/schema"
             case data = "datastore/standards/data"
-            case payload = "datastore/standards/payload"
+            case payloads = "datastore/standards/payloads"
         }
         enum Provider: String {
             case data = "datastore/provider/data"

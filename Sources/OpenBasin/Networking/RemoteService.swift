@@ -23,7 +23,7 @@ struct RemoteService {
         return components
     }
 
-    func fetch<T: Codable>(_ type: T.Type, with path: String, queryItems: [URLQueryItem], _ completion: @escaping (OBResult<T>) -> Void) {
+    func fetch<T: DatastoreModel>(_ type: T.Type, path: String, queryItems: [URLQueryItem], _ completion: @escaping (OBResult<T>) -> Void) {
         request(path: path, queryItems: queryItems) { result in
             switch result {
             case .success(let data):
@@ -40,14 +40,14 @@ struct RemoteService {
         }
     }
 
-    func fetch<T: Codable>(_ type: T.Type, with path: String, queryItems: [URLQueryItem], _ completion: @escaping (OBResult<[T]>) -> Void) {
+    func fetch<T: DatastoreModel>(_ type: [T].Type, path: String, queryItems: [URLQueryItem], _ completion: @escaping (OBResult<[T]>) -> Void) {
         request(path: path, queryItems: queryItems) { result in
             switch result {
             case .success(let data):
                 let decoder = JSONDecoder()
                 do {
-                    let models = try decoder.decode([T].self, from: data)
-                    completion(.success(models))
+                    let model = try decoder.decode([T].self, from: data)
+                    completion(.success(model))
                 } catch {
                     completion(.error(.modelMismatch))
                 }

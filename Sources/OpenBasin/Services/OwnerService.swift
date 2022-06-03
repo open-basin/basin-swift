@@ -9,6 +9,7 @@ import Foundation
 
 struct OwnerService {
     private let address: String
+    private let remote = RemoteService.shared
 
     init(address: String) {
         self.address = address
@@ -24,10 +25,25 @@ struct OwnerService {
 
     func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
 
+        remote.fetch([DataModel].self,
+                     path: Path.Datastore.Owner.data.rawValue,
+                     queryItems: [
+                        .init(name: "address", value: address)
+                     ])
+        { result in
+            completion(result)
+        }
     }
 
     func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
 
+        remote.fetch(path: Path.Datastore.Owner.payloads.rawValue,
+                     queryItems: [
+                        .init(name: "address", value: address)
+                     ])
+        { result in
+            completion(result)
+        }
     }
 }
 
@@ -36,6 +52,7 @@ extension OwnerService {
     struct StandardOwnerService {
         private let token: Int
         private let owner: String
+        private let remote = RemoteService.shared
 
         init(token: Int,
              owner: String) {
@@ -45,16 +62,34 @@ extension OwnerService {
 
         func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
 
+            remote.fetch([DataModel].self,
+                         path: Path.Datastore.Owner.Standard.data.rawValue,
+                         queryItems: [
+                            .init(name: "address", value: owner),
+                            .init(name: "standard", value: String(token))
+                         ])
+            { result in
+                completion(result)
+            }
         }
 
         func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
 
+            remote.fetch(path: Path.Datastore.Owner.Standard.payloads.rawValue,
+                         queryItems: [
+                            .init(name: "address", value: owner),
+                            .init(name: "standard", value: String(token))
+                         ])
+            { result in
+                completion(result)
+            }
         }
     }
 
     struct StandardsOwnerService {
         private let tokens: Set<Int>
         private let owner: String
+        private let remote = RemoteService.shared
 
         init(tokens: Set<Int>,
              owner: String) {
@@ -84,6 +119,7 @@ extension OwnerService {
 
 struct OwnersService {
     private let addresses: Set<String>
+    private let remote = RemoteService.shared
 
     init(addresses: Set<String>) {
         self.addresses = addresses
@@ -121,6 +157,7 @@ extension OwnersService {
     struct StandardOwnersService {
         private let token: Int
         private let owners: Set<String>
+        private let remote = RemoteService.shared
 
         init(token: Int,
              owners: Set<String>) {
@@ -140,7 +177,8 @@ extension OwnersService {
     struct StandardsOwnersService {
         private let tokens: Set<Int>
         private let owners: Set<String>
-
+        private let remote = RemoteService.shared
+        
         init(tokens: Set<Int>,
              owners: Set<String>) {
             self.tokens = tokens

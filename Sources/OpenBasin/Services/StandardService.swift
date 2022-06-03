@@ -9,31 +9,59 @@ import Foundation
 
 struct StandardService {
     private let token: Int
-    private let remote = RemoteService()
+    private let remote = RemoteService.shared
 
     init(token: Int) {
         self.token = token
     }
 
     func fetch(_ completion: @escaping (OBResult<StandardModel>) -> Void) {
-
+        remote.fetch(StandardModel.self,
+                     path: Path.Datastore.Standards.standard.rawValue,
+                     queryItems: [
+                        .init(name: "token", value: String(token))
+                     ])
+        { result in
+            completion(result)
+        }
     }
 
     func schema(_ completion: @escaping (OBResult<Data>) -> Void) {
-
+        remote.fetch(path: Path.Datastore.Standards.schema.rawValue,
+                     queryItems: [
+                        .init(name: "token", value: String(token))
+                     ])
+        { result in
+            completion(result)
+        }
     }
 
     func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
 
+        remote.fetch([DataModel].self,
+                     path: Path.Datastore.Standards.data.rawValue,
+                     queryItems: [
+                        .init(name: "token", value: String(token))
+                     ])
+        { result in
+            completion(result)
+        }
     }
 
-    func payloads(_ completion: @escaping (OBResult<[Data]>) -> Void) {
-
+    func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
+        remote.fetch(path: Path.Datastore.Standards.payloads.rawValue,
+                     queryItems: [
+                        .init(name: "token", value: String(token))
+                     ])
+        { result in
+            completion(result)
+        }
     }
 }
 
 struct StandardsService {
     private let tokens: Set<Int>
+    private let remote = RemoteService.shared
 
     init(tokens: Set<Int>) {
         self.tokens = tokens
@@ -77,8 +105,8 @@ struct StandardsService {
 }
 
 struct AllStandardsService {
-
     let all = AllStandards()
+    private let remote = RemoteService.shared
 
     struct AllStandards {
         func fetch(_ completion: @escaping (OBResult<[StandardModel]>) -> Void) {

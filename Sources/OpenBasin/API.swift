@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct DataStore {
+public struct Datastore {
     typealias api = Services
 }
 
