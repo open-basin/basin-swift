@@ -26,7 +26,7 @@ struct OwnerService: AsyncService {
         StandardOwnerService(token: token, owner: address, thread: thread)
     }
 
-    func standards(_ tokens: Set<Int>) -> StandardsOwnerService {
+    func standards(_ tokens: [Int]) -> StandardsOwnerService {
         StandardsOwnerService(tokens: tokens, owner: address, thread: thread)
     }
 
@@ -126,11 +126,11 @@ extension OwnerService {
 
     struct StandardsOwnerService: AsyncService {
         var thread: DispatchQueue?
-        private let tokens: Set<Int>
+        private let tokens: [Int]
         private let owner: String
         private let remote = RemoteService.shared
 
-        init(tokens: Set<Int>,
+        init(tokens: [Int],
              owner: String,
              thread: DispatchQueue? = nil) {
             self.tokens = tokens
@@ -164,10 +164,10 @@ extension OwnerService {
 
 struct OwnersService: AsyncService {
     var thread: DispatchQueue?
-    private let addresses: Set<String>
+    private let addresses: [String]
     private let remote = RemoteService.shared
 
-    init(addresses: Set<String>,
+    init(addresses: [String],
          thread: DispatchQueue? = nil) {
         self.addresses = addresses
         self.thread = thread
@@ -181,7 +181,7 @@ struct OwnersService: AsyncService {
         StandardOwnersService(token: token, owners: addresses, thread: thread)
     }
 
-    func standards(_ tokens: Set<Int>) -> StandardsOwnersService {
+    func standards(_ tokens: [Int]) -> StandardsOwnersService {
         StandardsOwnersService(tokens: tokens, owners: addresses, thread: thread)
     }
 
@@ -209,11 +209,11 @@ extension OwnersService {
     struct StandardOwnersService: AsyncService {
         var thread: DispatchQueue?
         private let token: Int
-        private let owners: Set<String>
+        private let owners: [String]
         private let remote = RemoteService.shared
 
         init(token: Int,
-             owners: Set<String>,
+             owners: [String],
              thread: DispatchQueue? = nil) {
             self.token = token
             self.owners = owners
@@ -235,12 +235,12 @@ extension OwnersService {
 
     struct StandardsOwnersService: AsyncService {
         var thread: DispatchQueue?
-        private let tokens: Set<Int>
-        private let owners: Set<String>
+        private let tokens: [Int]
+        private let owners: [String]
         private let remote = RemoteService.shared
         
-        init(tokens: Set<Int>,
-             owners: Set<String>,
+        init(tokens: [Int],
+             owners: [String],
              thread: DispatchQueue? = nil) {
             self.tokens = tokens
             self.owners = owners

@@ -23,14 +23,20 @@ enum Path {
         enum Data: String {
             case data = "datastore/data/data"
             case payload = "datastore/data/payload"
+            case dataset = "datastore/data/dataset"
+            case payloads = "datastore/data/payloads"
         }
         enum Standards: String {
-            case all = "datastore/standards/all"
+            case all = "datastore/standards/all/standards"
+            case allSchemas = "datastore/standards/all/schemas"
+            case standard = "datastore/standard/standard"
+            case schema = "datastore/standard/schema"
+            case data = "datastore/standard/data"
+            case payloads = "datastore/standard/payloads"
+            case standards = "datastore/standards/standards"
             case schemas = "datastore/standards/schemas"
-            case standard = "datastore/standards/standard"
-            case schema = "datastore/standards/schema"
-            case data = "datastore/standards/data"
-            case payloads = "datastore/standards/payloads"
+            case standardsData = "datastore/standards/data"
+            case standardsPayloads = "datastore/standards/payloads"
         }
         enum Provider: String {
             case data = "datastore/provider/data"

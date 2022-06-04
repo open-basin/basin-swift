@@ -60,10 +60,10 @@ struct DataService: AsyncService {
 
 struct DatasService: AsyncService {
     var thread: DispatchQueue?
-    private let tokens: Set<Int>
+    private let tokens: [Int]
     private let remote = RemoteService.shared
 
-    init(tokens: Set<Int>,
+    init(tokens: [Int],
          thread: DispatchQueue? = nil) {
         self.tokens = tokens
         self.thread = thread
@@ -74,20 +74,47 @@ struct DatasService: AsyncService {
     }
 
     func fetch(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
-
+        
+        remote.fetch([DataResponse].self,
+                     path: Path.Datastore.Data.dataset.rawValue,
+                     queryItems: [
+                        .init(name: "tokens", value: tokens.compactMap { String($0) } .joined(separator: ","))
+                     ])
+        { result in
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
+        }
     }
 
     func payloads(_ completion: @escaping (OBResult<[PayloadResponse]>) -> Void) {
 
+        remote.fetch([PayloadResponse].self,
+                     path: Path.Datastore.Data.payloads.rawValue,
+                     queryItems: [
+                        .init(name: "tokens", value: tokens.compactMap { String($0) } .joined(separator: ","))
+                     ])
+        { result in
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
+        }
     }
 
-
-    struct DataResponse {
+    struct DataResponse: DatastoreModel {
         let token: Int
         let data: DataModel
     }
 
-    struct PayloadResponse {
+    struct PayloadResponse: DatastoreModel {
         let token: Int
         let payload: Data
     }

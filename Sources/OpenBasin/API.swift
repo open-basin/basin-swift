@@ -17,11 +17,11 @@ struct Services {
         OwnerService(address: address)
     }
 
-    static func owners(_ addresses: Set<String>) -> OwnersService {
+    static func owners(_ addresses: [String]) -> OwnersService {
         OwnersService(addresses: addresses)
     }
 
-    static func data(_ tokens: Set<Int>) -> DatasService {
+    static func data(_ tokens: [Int]) -> DatasService {
         DatasService(tokens: tokens)
     }
 
@@ -29,7 +29,7 @@ struct Services {
         DataService(token: token)
     }
 
-    static func standards(_ tokens: Set<Int>) -> StandardsService {
+    static func standards(_ tokens: [Int]) -> StandardsService {
         StandardsService(tokens: tokens)
     }
 
