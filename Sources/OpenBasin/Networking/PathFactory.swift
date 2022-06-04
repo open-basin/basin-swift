@@ -18,6 +18,19 @@ enum Path {
             enum Standard: String {
                 case data = "datastore/owner/standard/data"
                 case payloads = "datastore/owner/standard/payloads"
+                case standardsData = "datastore/owner/standards/data"
+                case standardsPayloads = "datastore/owner/standards/payloads"
+            }
+        }
+        enum Owners: String {
+            case data = "datastore/owners/data"
+            case payloads = "datastore/owners/payloads"
+
+            enum Standard: String {
+                case data = "datastore/owners/standard/data"
+                case payloads = "datastore/owners/standard/payloads"
+                case standardsData = "datastore/owners/standards/data"
+                case standardsPayloads = "datastore/owners/standards/payloads"
             }
         }
         enum Data: String {

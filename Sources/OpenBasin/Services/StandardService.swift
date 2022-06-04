@@ -179,23 +179,43 @@ struct StandardsService: AsyncService {
     }
     
     struct StandardResponse: DatastoreModel {
-        let token: Int
-        let Standard: StandardModel
+        let standardToken: Int
+        let standard: StandardModel
+
+        enum CodingKeys: String, CodingKey {
+            case standardToken = "standard_token"
+            case standard
+        }
     }
     
     struct SchemaResponse: DatastoreModel {
-        let token: Int
+        let standardToken: Int
         let schema: Data
+
+        enum CodingKeys: String, CodingKey {
+            case standardToken = "standard_token"
+            case schema
+        }
     }
     
     struct DataResponse: DatastoreModel {
-        let token: Int
-        let data: DataModel
+        let standardToken: Int
+        let data: [DataModel]
+
+        enum CodingKeys: String, CodingKey {
+            case standardToken = "standard_token"
+            case data
+        }
     }
     
     struct PayloadResponse: DatastoreModel {
-        let token: Int
-        let payloads: Data
+        let standardToken: Int
+        let payloads: [Data]
+
+        enum CodingKeys: String, CodingKey {
+            case standardToken = "standard_token"
+            case payloads
+        }
     }
 }
 

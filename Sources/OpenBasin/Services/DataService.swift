@@ -110,12 +110,22 @@ struct DatasService: AsyncService {
     }
 
     struct DataResponse: DatastoreModel {
-        let token: Int
+        let dataToken: Int
         let data: DataModel
+
+        enum CodingKeys: String, CodingKey {
+            case dataToken = "data_token"
+            case data
+        }
     }
 
     struct PayloadResponse: DatastoreModel {
-        let token: Int
+        let dataToken: Int
         let payload: Data
+
+        enum CodingKeys: String, CodingKey {
+            case dataToken = "data_token"
+            case payload
+        }
     }
 }

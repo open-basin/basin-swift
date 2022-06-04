@@ -144,20 +144,60 @@ extension OwnerService {
 
         func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
 
+            remote.fetch([DataResponse].self,
+                         path: Path.Datastore.Owner.Standard.standardsData.rawValue,
+                         queryItems: [
+                            .init(name: "address", value: owner),
+                            .init(name: "standards", value: tokens.compactMap { String($0) }.joined(separator: ","))
+                         ])
+            { result in
+                if let thread = thread {
+                    thread.async {
+                        completion(result)
+                    }
+                } else {
+                    completion(result)
+                }
+            }
         }
 
         func payloads(_ completion: @escaping (OBResult<[PayloadsResponse]>) -> Void) {
 
+            remote.fetch([PayloadsResponse].self,
+                         path: Path.Datastore.Owner.Standard.standardsPayloads.rawValue,
+                         queryItems: [
+                            .init(name: "address", value: owner),
+                            .init(name: "standards", value: tokens.compactMap { String($0) }.joined(separator: ","))
+                         ])
+            { result in
+                if let thread = thread {
+                    thread.async {
+                        completion(result)
+                    }
+                } else {
+                    completion(result)
+                }
+            }
         }
 
-        struct DataResponse {
-            let standard: Int
-            let data: DataModel
+        struct DataResponse: DatastoreModel {
+            let standardToken: Int
+            let data: [DataModel]
+
+            enum CodingKeys: String, CodingKey {
+                case standardToken = "standard_token"
+                case data
+            }
         }
 
-        struct PayloadsResponse {
-            let standard: Int
-            let payload: Data
+        struct PayloadsResponse: DatastoreModel {
+            let standardToken: Int
+            let payloads: [Data]
+
+            enum CodingKeys: String, CodingKey {
+                case standardToken = "standard_token"
+                case payloads
+            }
         }
     }
 }
@@ -187,20 +227,58 @@ struct OwnersService: AsyncService {
 
     func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
 
+        remote.fetch([DataResponse].self,
+                     path: Path.Datastore.Owners.data.rawValue,
+                     queryItems: [
+                        .init(name: "addresses", value: addresses.joined(separator: ","))
+                     ])
+        { result in
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
+        }
     }
 
     func payloads(_ completion: @escaping (OBResult<[PayloadsResponse]>) -> Void) {
 
+        remote.fetch([PayloadsResponse].self,
+                     path: Path.Datastore.Owners.payloads.rawValue,
+                     queryItems: [
+                        .init(name: "addresses", value: addresses.joined(separator: ","))
+                     ])
+        { result in
+            if let thread = thread {
+                thread.async {
+                    completion(result)
+                }
+            } else {
+                completion(result)
+            }
+        }
     }
 
-    struct DataResponse {
-        let address: String
-        let data: DataModel
+    struct DataResponse: DatastoreModel {
+        let owner: String
+        let data: [DataModel]
+
+        enum CodingKeys: String, CodingKey {
+            case owner = "owner_address"
+            case data
+        }
     }
 
-    struct PayloadsResponse {
-        let address: String
-        let payload: Data
+    struct PayloadsResponse: DatastoreModel {
+        let owner: String
+        let payloads: [Data]
+
+        enum CodingKeys: String, CodingKey {
+            case owner = "owner_address"
+            case payloads
+        }
     }
 }
 
@@ -224,12 +302,62 @@ extension OwnersService {
             StandardOwnersService(token: token, owners: owners, thread: thread)
         }
 
-        func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
+        func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
 
+            remote.fetch([DataResponse].self,
+                         path: Path.Datastore.Owners.Standard.data.rawValue,
+                         queryItems: [
+                            .init(name: "addresses", value: owners.joined(separator: ",")),
+                            .init(name: "standard", value: String(token))
+                         ])
+            { result in
+                if let thread = thread {
+                    thread.async {
+                        completion(result)
+                    }
+                } else {
+                    completion(result)
+                }
+            }
         }
 
-        func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
+        func payloads(_ completion: @escaping (OBResult<[PayloadsResponse]>) -> Void) {
 
+            remote.fetch([PayloadsResponse].self,
+                         path: Path.Datastore.Owners.Standard.payloads.rawValue,
+                         queryItems: [
+                            .init(name: "addresses", value: owners.joined(separator: ",")),
+                            .init(name: "standard", value: String(token))
+                         ])
+            { result in
+                if let thread = thread {
+                    thread.async {
+                        completion(result)
+                    }
+                } else {
+                    completion(result)
+                }
+            }
+        }
+
+        struct DataResponse: DatastoreModel {
+            let owner: String
+            let data: [DataModel]
+
+            enum CodingKeys: String, CodingKey {
+                case owner = "owner_address"
+                case data
+            }
+        }
+
+        struct PayloadsResponse: DatastoreModel {
+            let owner: String
+            let payloads: [Data]
+
+            enum CodingKeys: String, CodingKey {
+                case owner = "owner_address"
+                case payloads
+            }
         }
     }
 
@@ -253,22 +381,64 @@ extension OwnersService {
 
         func data(_ completion: @escaping (OBResult<[DataOwnerResponse]>) -> Void) {
 
+            remote.fetch([DataOwnerResponse].self,
+                         path: Path.Datastore.Owners.Standard.standardsData.rawValue,
+                         queryItems: [
+                            .init(name: "addresses", value: owners.joined(separator: ",")),
+                            .init(name: "standards", value: tokens.compactMap { String($0) }.joined(separator: ","))
+                         ])
+            { result in
+                if let thread = thread {
+                    thread.async {
+                        completion(result)
+                    }
+                } else {
+                    completion(result)
+                }
+            }
         }
 
         func payloads(_ completion: @escaping (OBResult<[PayloadsOwnerResponse]>) -> Void) {
 
+            remote.fetch([PayloadsOwnerResponse].self,
+                         path: Path.Datastore.Owners.Standard.standardsPayloads.rawValue,
+                         queryItems: [
+                            .init(name: "addresses", value: owners.joined(separator: ",")),
+                            .init(name: "standards", value: tokens.compactMap { String($0) }.joined(separator: ","))
+                         ])
+            { result in
+                if let thread = thread {
+                    thread.async {
+                        completion(result)
+                    }
+                } else {
+                    completion(result)
+                }
+            }
         }
 
-        struct DataOwnerResponse {
+        struct DataOwnerResponse: DatastoreModel {
             let owner: String
-            let standard: Int
-            let data: DataModel
+            let standardToken: Int
+            let data: [DataModel]
+
+            enum CodingKeys: String, CodingKey {
+                case owner = "owner_address"
+                case standardToken = "standard_token"
+                case data
+            }
         }
 
-        struct PayloadsOwnerResponse {
+        struct PayloadsOwnerResponse: DatastoreModel {
             let owner: String
-            let standard: Int
-            let payload: Data
+            let standardToken: Int
+            let payloads: [Data]
+
+            enum CodingKeys: String, CodingKey {
+                case owner = "owner_address"
+                case standardToken = "standard_token"
+                case payloads
+            }
         }
     }
 }
