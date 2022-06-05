@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum OBResult<Element> {
+public enum OBResult<Element> {
     case success(_ value: Element)
     case error(_ value: ResultError)
 }

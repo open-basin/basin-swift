@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ProviderService: AsyncService {
+public struct ProviderService: AsyncService {
     var thread: DispatchQueue?
     private let address: String
     private let remote = RemoteService.shared
@@ -18,11 +18,11 @@ struct ProviderService: AsyncService {
         self.thread = thread
     }
 
-    func receive(on thread: DispatchQueue) -> Self {
+    public func receive(on thread: DispatchQueue) -> Self {
         ProviderService(address: address, thread: thread)
     }
 
-    func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
+    public func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
 
         remote.fetch([DataModel].self,
                      path: Path.Datastore.Provider.data.rawValue,
@@ -40,9 +40,9 @@ struct ProviderService: AsyncService {
         }
     }
 
-    func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
+    public func payloads(_ completion: @escaping (OBResult<[Data]>) -> Void) {
 
-        remote.fetch(path: Path.Datastore.Provider.payloads.rawValue,
+        remote.fetchSet(path: Path.Datastore.Provider.payloads.rawValue,
                      queryItems: [
                         .init(name: "address", value: address)
                      ])

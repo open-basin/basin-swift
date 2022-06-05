@@ -8,42 +8,42 @@
 import Foundation
 
 public struct Datastore {
-    typealias api = Services
+    public typealias api = Services
 }
 
-struct Services {
+public struct Services {
 
-    static func owner(_ address: String) -> OwnerService {
+    public static func owner(_ address: String) -> OwnerService {
         OwnerService(address: address)
     }
 
-    static func owners(_ addresses: [String]) -> OwnersService {
+    public static func owners(_ addresses: [String]) -> OwnersService {
         OwnersService(addresses: addresses)
     }
 
-    static func data(_ tokens: [Int]) -> DatasService {
+    public static func data(_ tokens: [Int]) -> DatasService {
         DatasService(tokens: tokens)
     }
 
-    static func data(_ token: Int) -> DataService {
+    public static func data(_ token: Int) -> DataService {
         DataService(token: token)
     }
 
-    static func standards(_ tokens: [Int]) -> StandardsService {
+    public static func standards(_ tokens: [Int]) -> StandardsService {
         StandardsService(tokens: tokens)
     }
 
-    static func standard(_ token: Int) -> StandardService {
+    public static func standard(_ token: Int) -> StandardService {
         StandardService(token: token)
     }
 
-    static func provider(_ address: String) -> ProviderService {
+    public static func provider(_ address: String) -> ProviderService {
         ProviderService(address: address)
     }
 
-    static func minter(_ address: String) -> MinterService {
+    public static func minter(_ address: String) -> MinterService {
         MinterService(address: address)
     }
 
-    static let standards = AllStandardsService()
+    public static let standards = AllStandardsService()
 }

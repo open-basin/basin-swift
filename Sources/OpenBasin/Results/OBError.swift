@@ -7,16 +7,29 @@
 
 import Foundation
 
-struct OBError: Equatable {
+public struct OBError: Equatable {
     let code: Int
     let message: String
 }
 
-enum OBErrorCases: Error {
+public enum OBErrorCases: Error {
     case badResponse
+    case invalidInput
+    case modelMismatch
+
+    func obj() -> OBError {
+        switch self {
+        case .badResponse:
+            return ErrorConstants.badResponse
+        case .invalidInput:
+            return ErrorConstants.invalidInput
+        case .modelMismatch:
+            return ErrorConstants.modelMismatch
+        }
+    }
 }
 
-struct ErrorConstants {
+public struct ErrorConstants {
 
     static let badResponse = OBError(code: 400, message: "Bad Response.")
 
@@ -25,16 +38,16 @@ struct ErrorConstants {
     static let modelMismatch = OBError(code: 420, message: "Model Mismatch.")
 }
 
-enum ResultError {
+public enum ResultError {
     case badResponse
     case invalidInput
     case modelMismatch
 }
 
 extension ResultError: RawRepresentable {
-    typealias RawValue = OBError
+    public typealias RawValue = OBError
 
-    init?(rawValue: RawValue) {
+    public init?(rawValue: RawValue) {
         switch rawValue {
         case ErrorConstants.badResponse:
             self = .badResponse
@@ -46,7 +59,7 @@ extension ResultError: RawRepresentable {
         }
     }
 
-    var rawValue: RawValue {
+    public var rawValue: RawValue {
         switch self {
         case .badResponse:
             return ErrorConstants.badResponse

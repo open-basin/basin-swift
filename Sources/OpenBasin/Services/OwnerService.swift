@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct OwnerService: AsyncService {
+public struct OwnerService: AsyncService {
     var thread: DispatchQueue?
     private let address: String
     private let remote = RemoteService.shared
@@ -18,19 +18,19 @@ struct OwnerService: AsyncService {
         self.thread = thread
     }
 
-    func receive(on thread: DispatchQueue) -> Self {
+    public func receive(on thread: DispatchQueue) -> Self {
         OwnerService(address: address, thread: thread)
     }
 
-    func standard(_ token: Int) -> StandardOwnerService {
+    public func standard(_ token: Int) -> StandardOwnerService {
         StandardOwnerService(token: token, owner: address, thread: thread)
     }
 
-    func standards(_ tokens: [Int]) -> StandardsOwnerService {
+    public func standards(_ tokens: [Int]) -> StandardsOwnerService {
         StandardsOwnerService(tokens: tokens, owner: address, thread: thread)
     }
 
-    func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
+    public func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
 
         remote.fetch([DataModel].self,
                      path: Path.Datastore.Owner.data.rawValue,
@@ -48,9 +48,9 @@ struct OwnerService: AsyncService {
         }
     }
 
-    func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
+    public func payloads(_ completion: @escaping (OBResult<[Data]>) -> Void) {
 
-        remote.fetch(path: Path.Datastore.Owner.payloads.rawValue,
+        remote.fetchSet(path: Path.Datastore.Owner.payloads.rawValue,
                      queryItems: [
                         .init(name: "address", value: address)
                      ])
@@ -68,7 +68,7 @@ struct OwnerService: AsyncService {
 
 extension OwnerService {
 
-    struct StandardOwnerService: AsyncService {
+    public struct StandardOwnerService: AsyncService {
         var thread: DispatchQueue?
         private let token: Int
         private let owner: String
@@ -82,11 +82,11 @@ extension OwnerService {
             self.thread = thread
         }
 
-        func receive(on thread: DispatchQueue) -> Self {
+        public func receive(on thread: DispatchQueue) -> Self {
             StandardOwnerService(token: token, owner: owner, thread: thread)
         }
 
-        func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
+        public func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
 
             remote.fetch([DataModel].self,
                          path: Path.Datastore.Owner.Standard.data.rawValue,
@@ -105,9 +105,9 @@ extension OwnerService {
             }
         }
 
-        func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
+        public func payloads(_ completion: @escaping (OBResult<[Data]>) -> Void) {
 
-            remote.fetch(path: Path.Datastore.Owner.Standard.payloads.rawValue,
+            remote.fetchSet(path: Path.Datastore.Owner.Standard.payloads.rawValue,
                          queryItems: [
                             .init(name: "address", value: owner),
                             .init(name: "standard", value: String(token))
@@ -124,7 +124,7 @@ extension OwnerService {
         }
     }
 
-    struct StandardsOwnerService: AsyncService {
+    public struct StandardsOwnerService: AsyncService {
         var thread: DispatchQueue?
         private let tokens: [Int]
         private let owner: String
@@ -138,13 +138,13 @@ extension OwnerService {
             self.thread = thread
         }
 
-        func receive(on thread: DispatchQueue) -> Self {
+        public func receive(on thread: DispatchQueue) -> Self {
             StandardsOwnerService(tokens: tokens, owner: owner, thread: thread)
         }
 
-        func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
+        public func data(_ completion: @escaping (OBResult<[OwnerDataModel]>) -> Void) {
 
-            remote.fetch([DataResponse].self,
+            remote.fetch([OwnerDataModel].self,
                          path: Path.Datastore.Owner.Standard.standardsData.rawValue,
                          queryItems: [
                             .init(name: "address", value: owner),
@@ -161,9 +161,9 @@ extension OwnerService {
             }
         }
 
-        func payloads(_ completion: @escaping (OBResult<[PayloadsResponse]>) -> Void) {
+        public func payloads(_ completion: @escaping (OBResult<[OwnerPayloadsModel]>) -> Void) {
 
-            remote.fetch([PayloadsResponse].self,
+            remote.fetch([OwnerPayloadsModel].self,
                          path: Path.Datastore.Owner.Standard.standardsPayloads.rawValue,
                          queryItems: [
                             .init(name: "address", value: owner),
@@ -179,30 +179,10 @@ extension OwnerService {
                 }
             }
         }
-
-        struct DataResponse: DatastoreModel {
-            let standardToken: Int
-            let data: [DataModel]
-
-            enum CodingKeys: String, CodingKey {
-                case standardToken = "standard_token"
-                case data
-            }
-        }
-
-        struct PayloadsResponse: DatastoreModel {
-            let standardToken: Int
-            let payloads: [Data]
-
-            enum CodingKeys: String, CodingKey {
-                case standardToken = "standard_token"
-                case payloads
-            }
-        }
     }
 }
 
-struct OwnersService: AsyncService {
+public struct OwnersService: AsyncService {
     var thread: DispatchQueue?
     private let addresses: [String]
     private let remote = RemoteService.shared
@@ -213,21 +193,21 @@ struct OwnersService: AsyncService {
         self.thread = thread
     }
 
-    func receive(on thread: DispatchQueue) -> Self {
+    public func receive(on thread: DispatchQueue) -> Self {
         OwnersService(addresses: addresses, thread: thread)
     }
 
-    func standard(_ token: Int) -> StandardOwnersService {
+    public func standard(_ token: Int) -> StandardOwnersService {
         StandardOwnersService(token: token, owners: addresses, thread: thread)
     }
 
-    func standards(_ tokens: [Int]) -> StandardsOwnersService {
+    public func standards(_ tokens: [Int]) -> StandardsOwnersService {
         StandardsOwnersService(tokens: tokens, owners: addresses, thread: thread)
     }
 
-    func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
+    public func data(_ completion: @escaping (OBResult<[OwnerDataModel]>) -> Void) {
 
-        remote.fetch([DataResponse].self,
+        remote.fetch([OwnerDataModel].self,
                      path: Path.Datastore.Owners.data.rawValue,
                      queryItems: [
                         .init(name: "addresses", value: addresses.joined(separator: ","))
@@ -243,9 +223,9 @@ struct OwnersService: AsyncService {
         }
     }
 
-    func payloads(_ completion: @escaping (OBResult<[PayloadsResponse]>) -> Void) {
+    public func payloads(_ completion: @escaping (OBResult<[OwnerPayloadsModel]>) -> Void) {
 
-        remote.fetch([PayloadsResponse].self,
+        remote.fetch([OwnerPayloadsModel].self,
                      path: Path.Datastore.Owners.payloads.rawValue,
                      queryItems: [
                         .init(name: "addresses", value: addresses.joined(separator: ","))
@@ -260,31 +240,11 @@ struct OwnersService: AsyncService {
             }
         }
     }
-
-    struct DataResponse: DatastoreModel {
-        let owner: String
-        let data: [DataModel]
-
-        enum CodingKeys: String, CodingKey {
-            case owner = "owner_address"
-            case data
-        }
-    }
-
-    struct PayloadsResponse: DatastoreModel {
-        let owner: String
-        let payloads: [Data]
-
-        enum CodingKeys: String, CodingKey {
-            case owner = "owner_address"
-            case payloads
-        }
-    }
 }
 
 extension OwnersService {
 
-    struct StandardOwnersService: AsyncService {
+    public struct StandardOwnersService: AsyncService {
         var thread: DispatchQueue?
         private let token: Int
         private let owners: [String]
@@ -298,13 +258,13 @@ extension OwnersService {
             self.thread = thread
         }
 
-        func receive(on thread: DispatchQueue) -> Self {
+        public func receive(on thread: DispatchQueue) -> Self {
             StandardOwnersService(token: token, owners: owners, thread: thread)
         }
 
-        func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
+        public func data(_ completion: @escaping (OBResult<[OwnerDataModel]>) -> Void) {
 
-            remote.fetch([DataResponse].self,
+            remote.fetch([OwnerDataModel].self,
                          path: Path.Datastore.Owners.Standard.data.rawValue,
                          queryItems: [
                             .init(name: "addresses", value: owners.joined(separator: ",")),
@@ -321,9 +281,9 @@ extension OwnersService {
             }
         }
 
-        func payloads(_ completion: @escaping (OBResult<[PayloadsResponse]>) -> Void) {
+        public func payloads(_ completion: @escaping (OBResult<[OwnerPayloadsModel]>) -> Void) {
 
-            remote.fetch([PayloadsResponse].self,
+            remote.fetch([OwnerPayloadsModel].self,
                          path: Path.Datastore.Owners.Standard.payloads.rawValue,
                          queryItems: [
                             .init(name: "addresses", value: owners.joined(separator: ",")),
@@ -339,29 +299,9 @@ extension OwnersService {
                 }
             }
         }
-
-        struct DataResponse: DatastoreModel {
-            let owner: String
-            let data: [DataModel]
-
-            enum CodingKeys: String, CodingKey {
-                case owner = "owner_address"
-                case data
-            }
-        }
-
-        struct PayloadsResponse: DatastoreModel {
-            let owner: String
-            let payloads: [Data]
-
-            enum CodingKeys: String, CodingKey {
-                case owner = "owner_address"
-                case payloads
-            }
-        }
     }
 
-    struct StandardsOwnersService: AsyncService {
+    public struct StandardsOwnersService: AsyncService {
         var thread: DispatchQueue?
         private let tokens: [Int]
         private let owners: [String]
@@ -375,13 +315,13 @@ extension OwnersService {
             self.thread = thread
         }
 
-        func receive(on thread: DispatchQueue) -> Self {
+        public func receive(on thread: DispatchQueue) -> Self {
             StandardsOwnersService(tokens: tokens, owners: owners, thread: thread)
         }
 
-        func data(_ completion: @escaping (OBResult<[DataOwnerResponse]>) -> Void) {
+        public func data(_ completion: @escaping (OBResult<[OwnerStandardDataModel]>) -> Void) {
 
-            remote.fetch([DataOwnerResponse].self,
+            remote.fetch([OwnerStandardDataModel].self,
                          path: Path.Datastore.Owners.Standard.standardsData.rawValue,
                          queryItems: [
                             .init(name: "addresses", value: owners.joined(separator: ",")),
@@ -398,9 +338,9 @@ extension OwnersService {
             }
         }
 
-        func payloads(_ completion: @escaping (OBResult<[PayloadsOwnerResponse]>) -> Void) {
+        public func payloads(_ completion: @escaping (OBResult<[OwnerStandardPayloadsModel]>) -> Void) {
 
-            remote.fetch([PayloadsOwnerResponse].self,
+            remote.fetch([OwnerStandardPayloadsModel].self,
                          path: Path.Datastore.Owners.Standard.standardsPayloads.rawValue,
                          queryItems: [
                             .init(name: "addresses", value: owners.joined(separator: ",")),
@@ -414,30 +354,6 @@ extension OwnersService {
                 } else {
                     completion(result)
                 }
-            }
-        }
-
-        struct DataOwnerResponse: DatastoreModel {
-            let owner: String
-            let standardToken: Int
-            let data: [DataModel]
-
-            enum CodingKeys: String, CodingKey {
-                case owner = "owner_address"
-                case standardToken = "standard_token"
-                case data
-            }
-        }
-
-        struct PayloadsOwnerResponse: DatastoreModel {
-            let owner: String
-            let standardToken: Int
-            let payloads: [Data]
-
-            enum CodingKeys: String, CodingKey {
-                case owner = "owner_address"
-                case standardToken = "standard_token"
-                case payloads
             }
         }
     }

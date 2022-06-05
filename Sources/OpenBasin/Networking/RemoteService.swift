@@ -29,6 +29,9 @@ struct RemoteService {
             case .success(let data):
                 let decoder = JSONDecoder()
                 do {
+                    let json = try JSONSerialization.jsonObject(with: data)
+                    let options = DataDecoder.Options(json: json)
+                    decoder.userInfo = [DataDecoder.Options.key: options]
                     let model = try decoder.decode(T.self, from: data)
                     completion(.success(model))
                 } catch {
@@ -46,8 +49,18 @@ struct RemoteService {
             case .success(let data):
                 let decoder = JSONDecoder()
                 do {
-                    let model = try decoder.decode([T].self, from: data)
-                    completion(.success(model))
+                    let json = try JSONSerialization.jsonObject(with: data)
+                    if let dict = json as? [String: Any],
+                        let items = dict["items"] {
+                        let itemsData = try JSONSerialization.data(withJSONObject: items)
+                        let itemsJson = try JSONSerialization.jsonObject(with: itemsData)
+                        let options = DataDecoder.Options(json: itemsJson)
+                        decoder.userInfo = [DataDecoder.Options.key: options]
+                        let models = try decoder.decode([T].self, from: itemsData)
+                        completion(.success(models))
+                    } else {
+                        completion(.error(.invalidInput))
+                    }
                 } catch {
                     completion(.error(.modelMismatch))
                 }
@@ -68,6 +81,32 @@ struct RemoteService {
         }
     }
 
+    func fetchSet(path: String, queryItems: [URLQueryItem], _ completion: @escaping (OBResult<[Data]>) -> Void) {
+        request(path: path, queryItems: queryItems) { result in
+            switch result {
+            case .success(let data):
+                do {
+                    let json = try JSONSerialization.jsonObject(with: data)
+                    if let dict = json as? [String: Any],
+                        let items = dict["items"] as? [Any] {
+                        var result = [Data]()
+                        for item in items {
+                            let itemData = try JSONSerialization.data(withJSONObject: item)
+                            result.append(itemData)
+                        }
+                        completion(.success(result))
+                    } else {
+                        completion(.error(.invalidInput))
+                    }
+                } catch {
+                    completion(.error(.modelMismatch))
+                }
+            case .error(let error):
+                completion(.error(error))
+            }
+        }
+    }
+
     private func request(path: String, queryItems: [URLQueryItem], _ completion: @escaping (OBResult<Data>) -> Void) {
         guard let baseComponents = baseComponents else {
             return
@@ -81,7 +120,16 @@ struct RemoteService {
         }
 
         let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
-            guard let data = data else { return }
+            guard error == nil else {
+                completion(.error(.badResponse))
+                return
+            }
+
+            guard let data = data else {
+                completion(.error(.badResponse))
+                return
+            }
+
             completion(.success(data))
         }
 

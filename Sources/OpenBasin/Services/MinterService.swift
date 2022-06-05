@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MinterService: AsyncService {
+public struct MinterService: AsyncService {
     var thread: DispatchQueue?
     private let address: String
     private let remote = RemoteService.shared
@@ -17,11 +17,11 @@ struct MinterService: AsyncService {
         self.address = address
     }
 
-    func receive(on thread: DispatchQueue) -> Self {
+    public func receive(on thread: DispatchQueue) -> Self {
         MinterService(address: address, thread: thread)
     }
 
-    func standards(_ completion: @escaping (OBResult<[StandardModel]>) -> Void) {
+    public func standards(_ completion: @escaping (OBResult<[StandardModel]>) -> Void) {
 
         remote.fetch([StandardModel].self,
                      path: Path.Datastore.Minter.standards.rawValue,
@@ -39,9 +39,9 @@ struct MinterService: AsyncService {
         }
     }
 
-    func schemas(_ completion: @escaping (OBResult<Data>) -> Void) {
+    public func schemas(_ completion: @escaping (OBResult<[Data]>) -> Void) {
 
-        remote.fetch(path: Path.Datastore.Data.data.rawValue,
+        remote.fetchSet(path: Path.Datastore.Data.data.rawValue,
                      queryItems: [
                         .init(name: "address", value: address)
                      ])

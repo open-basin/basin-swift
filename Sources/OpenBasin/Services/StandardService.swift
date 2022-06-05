@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct StandardService: AsyncService {
+public struct StandardService: AsyncService {
     var thread: DispatchQueue?
     private let token: Int
     private let remote = RemoteService.shared
@@ -18,11 +18,11 @@ struct StandardService: AsyncService {
         self.thread = thread
     }
     
-    func receive(on thread: DispatchQueue) -> Self {
+    public func receive(on thread: DispatchQueue) -> Self {
         StandardService(token: token, thread: thread)
     }
     
-    func fetch(_ completion: @escaping (OBResult<StandardModel>) -> Void) {
+    public func fetch(_ completion: @escaping (OBResult<StandardModel>) -> Void) {
         remote.fetch(StandardModel.self,
                      path: Path.Datastore.Standards.standard.rawValue,
                      queryItems: [
@@ -39,7 +39,7 @@ struct StandardService: AsyncService {
         }
     }
     
-    func schema(_ completion: @escaping (OBResult<Data>) -> Void) {
+    public func schema(_ completion: @escaping (OBResult<Data>) -> Void) {
         remote.fetch(path: Path.Datastore.Standards.schema.rawValue,
                      queryItems: [
                         .init(name: "token", value: String(token))
@@ -55,7 +55,7 @@ struct StandardService: AsyncService {
         }
     }
     
-    func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
+    public func data(_ completion: @escaping (OBResult<[DataModel]>) -> Void) {
         
         remote.fetch([DataModel].self,
                      path: Path.Datastore.Standards.data.rawValue,
@@ -73,9 +73,9 @@ struct StandardService: AsyncService {
         }
     }
     
-    func payloads(_ completion: @escaping (OBResult<Data>) -> Void) {
+    public func payloads(_ completion: @escaping (OBResult<[Data]>) -> Void) {
         
-        remote.fetch(path: Path.Datastore.Standards.payloads.rawValue,
+        remote.fetchSet(path: Path.Datastore.Standards.payloads.rawValue,
                      queryItems: [
                         .init(name: "token", value: String(token))
                      ])
@@ -91,7 +91,7 @@ struct StandardService: AsyncService {
     }
 }
 
-struct StandardsService: AsyncService {
+public struct StandardsService: AsyncService {
     var thread: DispatchQueue?
     private let tokens: [Int]
     private let remote = RemoteService.shared
@@ -102,13 +102,13 @@ struct StandardsService: AsyncService {
         self.thread = thread
     }
     
-    func receive(on thread: DispatchQueue) -> Self {
+    public func receive(on thread: DispatchQueue) -> Self {
         StandardsService(tokens: tokens, thread: thread)
     }
     
-    func fetch(_ completion: @escaping (OBResult<[StandardResponse]>) -> Void) {
+    public func fetch(_ completion: @escaping (OBResult<[StandardSelfModel]>) -> Void) {
         
-        remote.fetch([StandardResponse].self,
+        remote.fetch([StandardSelfModel].self,
                      path: Path.Datastore.Standards.standards.rawValue,
                      queryItems: [
                         .init(name: "tokens", value: tokens.compactMap { String($0) } .joined(separator: ","))
@@ -124,9 +124,9 @@ struct StandardsService: AsyncService {
         }
     }
     
-    func schemas(_ completion: @escaping (OBResult<[SchemaResponse]>) -> Void) {
+    public func schemas(_ completion: @escaping (OBResult<[StandardSchemaModel]>) -> Void) {
         
-        remote.fetch([SchemaResponse].self,
+        remote.fetch([StandardSchemaModel].self,
                      path: Path.Datastore.Standards.schemas.rawValue,
                      queryItems: [
                         .init(name: "tokens", value: tokens.compactMap { String($0) } .joined(separator: ","))
@@ -142,9 +142,9 @@ struct StandardsService: AsyncService {
         }
     }
     
-    func data(_ completion: @escaping (OBResult<[DataResponse]>) -> Void) {
+    public func data(_ completion: @escaping (OBResult<[StandardDataModel]>) -> Void) {
         
-        remote.fetch([DataResponse].self,
+        remote.fetch([StandardDataModel].self,
                      path: Path.Datastore.Standards.standardsData.rawValue,
                      queryItems: [
                         .init(name: "tokens", value: tokens.compactMap { String($0) } .joined(separator: ","))
@@ -160,9 +160,9 @@ struct StandardsService: AsyncService {
         }
     }
     
-    func payloads(_ completion: @escaping (OBResult<[PayloadResponse]>) -> Void) {
+    public func payloads(_ completion: @escaping (OBResult<[StandardPayloadsModel]>) -> Void) {
         
-        remote.fetch([PayloadResponse].self,
+        remote.fetch([StandardPayloadsModel].self,
                      path: Path.Datastore.Standards.standardsPayloads.rawValue,
                      queryItems: [
                         .init(name: "tokens", value: tokens.compactMap { String($0) } .joined(separator: ","))
@@ -177,49 +177,9 @@ struct StandardsService: AsyncService {
             }
         }
     }
-    
-    struct StandardResponse: DatastoreModel {
-        let standardToken: Int
-        let standard: StandardModel
-
-        enum CodingKeys: String, CodingKey {
-            case standardToken = "standard_token"
-            case standard
-        }
-    }
-    
-    struct SchemaResponse: DatastoreModel {
-        let standardToken: Int
-        let schema: Data
-
-        enum CodingKeys: String, CodingKey {
-            case standardToken = "standard_token"
-            case schema
-        }
-    }
-    
-    struct DataResponse: DatastoreModel {
-        let standardToken: Int
-        let data: [DataModel]
-
-        enum CodingKeys: String, CodingKey {
-            case standardToken = "standard_token"
-            case data
-        }
-    }
-    
-    struct PayloadResponse: DatastoreModel {
-        let standardToken: Int
-        let payloads: [Data]
-
-        enum CodingKeys: String, CodingKey {
-            case standardToken = "standard_token"
-            case payloads
-        }
-    }
 }
 
-struct AllStandardsService: AsyncService {
+public struct AllStandardsService: AsyncService {
     let thread: DispatchQueue?
     private let remote = RemoteService.shared
     
@@ -231,7 +191,7 @@ struct AllStandardsService: AsyncService {
         self.thread = thread
     }
     
-    func receive(on thread: DispatchQueue) -> Self {
+    public func receive(on thread: DispatchQueue) -> Self {
         AllStandardsService(thread: thread)
     }
     
@@ -243,11 +203,11 @@ struct AllStandardsService: AsyncService {
             self.thread = thread
         }
         
-        func receive(on thread: DispatchQueue) -> Self {
+        public func receive(on thread: DispatchQueue) -> Self {
             AllStandards(thread: thread)
         }
         
-        func fetch(_ completion: @escaping (OBResult<[StandardModel]>) -> Void) {
+        public func fetch(_ completion: @escaping (OBResult<[StandardModel]>) -> Void) {
             
             remote.fetch([StandardModel].self,
                          path: Path.Datastore.Standards.all.rawValue,
@@ -263,9 +223,9 @@ struct AllStandardsService: AsyncService {
             }
         }
         
-        func schemas(_ completion: @escaping (OBResult<Data>) -> Void) {
+        public func schemas(_ completion: @escaping (OBResult<[Data]>) -> Void) {
             
-            remote.fetch(path: Path.Datastore.Standards.allSchemas.rawValue,
+            remote.fetchSet(path: Path.Datastore.Standards.allSchemas.rawValue,
                          queryItems: [])
             { result in
                 if let thread = thread {
