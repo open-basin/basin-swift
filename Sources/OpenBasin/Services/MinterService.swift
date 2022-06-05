@@ -15,6 +15,7 @@ public struct MinterService: AsyncService {
     init(address: String,
          thread: DispatchQueue? = nil) {
         self.address = address
+        self.thread = thread
     }
 
     public func receive(on thread: DispatchQueue) -> Self {

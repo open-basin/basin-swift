@@ -8,10 +8,10 @@
 import Foundation
 
 public struct StandardModel: DatastoreModel {
-    let token: Int
-    let minter: String
-    let name: String
-    let schema: Data
+    public let token: Int
+    public let minter: String
+    public let name: String
+    public let schema: Data
 
     enum CodingKeys: String, CodingKey {
         case token

@@ -8,12 +8,12 @@
 import Foundation
 
 public struct DataModel: DatastoreModel {
-    let token: Int
-    let owner: String
-    let provider: String
-    let standard: Int
-    let timestamp: Date
-    let payload: Data
+    public let token: Int
+    public let owner: String
+    public let provider: String
+    public let standard: Int
+    public let timestamp: Date
+    public let payload: Data
 
     enum CodingKeys: String, CodingKey {
         case token

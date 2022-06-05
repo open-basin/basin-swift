@@ -183,7 +183,7 @@ public struct AllStandardsService: AsyncService {
     let thread: DispatchQueue?
     private let remote = RemoteService.shared
     
-    var all: AllStandards {
+    public var all: AllStandards {
         AllStandards(thread: self.thread)
     }
     
@@ -195,7 +195,7 @@ public struct AllStandardsService: AsyncService {
         AllStandardsService(thread: thread)
     }
     
-    struct AllStandards: AsyncService {
+    public struct AllStandards: AsyncService {
         let thread: DispatchQueue?
         private let remote = RemoteService.shared
         

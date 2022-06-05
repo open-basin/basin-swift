@@ -8,8 +8,8 @@
 import Foundation
 
 public struct DataSelfModel: DatastoreModel {
-    let dataToken: Int
-    let data: DataModel
+    public let dataToken: Int
+    public let data: DataModel
 
     enum CodingKeys: String, CodingKey {
         case dataToken = "data_token"
@@ -18,8 +18,8 @@ public struct DataSelfModel: DatastoreModel {
 }
 
 public struct DataPayloadModel: DatastoreModel {
-    let dataToken: Int
-    let payload: Data
+    public let dataToken: Int
+    public let payload: Data
 
     enum CodingKeys: String, CodingKey {
         case dataToken = "data_token"
@@ -34,8 +34,8 @@ public struct DataPayloadModel: DatastoreModel {
 }
 
 public struct StandardSelfModel: DatastoreModel {
-    let standardToken: Int
-    let standard: StandardModel
+    public let standardToken: Int
+    public let standard: StandardModel
 
     enum CodingKeys: String, CodingKey {
         case standardToken = "standard_token"
@@ -44,8 +44,8 @@ public struct StandardSelfModel: DatastoreModel {
 }
 
 public struct StandardSchemaModel: DatastoreModel {
-    let standardToken: Int
-    let schema: Data
+    public let standardToken: Int
+    public let schema: Data
 
     enum CodingKeys: String, CodingKey {
         case standardToken = "standard_token"
@@ -60,8 +60,8 @@ public struct StandardSchemaModel: DatastoreModel {
 }
 
 public struct StandardDataModel: DatastoreModel {
-    let standardToken: Int
-    let data: [DataModel]
+    public let standardToken: Int
+    public let data: [DataModel]
 
     enum CodingKeys: String, CodingKey {
         case standardToken = "standard_token"
@@ -70,8 +70,8 @@ public struct StandardDataModel: DatastoreModel {
 }
 
 public struct StandardPayloadsModel: DatastoreModel {
-    let standardToken: Int
-    let payloads: [Data]
+    public let standardToken: Int
+    public let payloads: [Data]
 
     enum CodingKeys: String, CodingKey {
         case standardToken = "standard_token"
@@ -86,8 +86,8 @@ public struct StandardPayloadsModel: DatastoreModel {
 }
 
 public struct OwnerDataModel: DatastoreModel {
-    let owner: String
-    let data: [DataModel]
+    public let owner: String
+    public let data: [DataModel]
 
     enum CodingKeys: String, CodingKey {
         case owner = "owner_address"
@@ -96,8 +96,8 @@ public struct OwnerDataModel: DatastoreModel {
 }
 
 public struct OwnerPayloadsModel: DatastoreModel {
-    let owner: String
-    let payloads: [Data]
+    public let owner: String
+    public let payloads: [Data]
 
     enum CodingKeys: String, CodingKey {
         case owner = "owner_address"
@@ -112,9 +112,9 @@ public struct OwnerPayloadsModel: DatastoreModel {
 }
 
 public struct OwnerStandardDataModel: DatastoreModel {
-    let owner: String
-    let standardToken: Int
-    let data: [DataModel]
+    public let owner: String
+    public let standardToken: Int
+    public let data: [DataModel]
 
     enum CodingKeys: String, CodingKey {
         case owner = "owner_address"
@@ -124,9 +124,9 @@ public struct OwnerStandardDataModel: DatastoreModel {
 }
 
 public struct OwnerStandardPayloadsModel: DatastoreModel {
-    let owner: String
-    let standardToken: Int
-    let payloads: [Data]
+    public let owner: String
+    public let standardToken: Int
+    public let payloads: [Data]
 
     enum CodingKeys: String, CodingKey {
         case owner = "owner_address"
