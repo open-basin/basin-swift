@@ -122,6 +122,7 @@ struct RemoteService {
 
         var request = URLRequest(url: url)
         request.addValue(token, forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "content-type")
 
         let task = URLSession.shared.dataTask(with: request) {(data, response, error) in
             guard error == nil else {
