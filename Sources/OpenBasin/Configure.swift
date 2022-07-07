@@ -12,18 +12,16 @@ public func configure(with configuration: Configuration) {
 }
 
 public enum Configuration {
-    case rinkeby(key: String)
+    case goerli(key: String)
     case mainnet(key: String)
 
     func environment() -> Environment {
         switch self {
-        case .rinkeby(let key):
-            return Environment(chain: .rinkeby,
-                               appEngine: AppEngine.rinkeby,
+        case .goerli(let key):
+            return Environment(chain: .goerli,
                                apiKey: key)
         case .mainnet(let key):
             return Environment(chain: .mainnet,
-                               appEngine: AppEngine.mainnet,
                                apiKey: key)
         }
     }

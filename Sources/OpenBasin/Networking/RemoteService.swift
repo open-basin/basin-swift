@@ -12,7 +12,7 @@ struct RemoteService {
     static let shared = RemoteService()
 
     private var baseComponents: URLComponents? {
-        guard let baseURL = Environment.shared?.appEngine.rawValue else {
+        guard let baseURL = Environment.shared?.chain.engine else {
             return nil
         }
 
@@ -21,6 +21,10 @@ struct RemoteService {
         components.host = baseURL
 
         return components
+    }
+
+    private var token: String {
+        Environment.shared?.bearerToken ?? ""
     }
 
     func fetch<T: DatastoreModel>(_ type: T.Type, path: String, queryItems: [URLQueryItem], _ completion: @escaping (OBResult<T>) -> Void) {
@@ -108,18 +112,18 @@ struct RemoteService {
     }
 
     private func request(path: String, queryItems: [URLQueryItem], _ completion: @escaping (OBResult<Data>) -> Void) {
-        guard let baseComponents = baseComponents else {
-            return
-        }
+        guard let baseComponents = baseComponents else { return }
+
         var components = baseComponents
         components.path = path
         components.queryItems = queryItems
 
-        guard let url = components.url else {
-            return
-        }
+        guard let url = components.url else { return }
 
-        let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+        var request = URLRequest(url: url)
+        request.addValue(token, forHTTPHeaderField: "Authorization")
+
+        let task = URLSession.shared.dataTask(with: request) {(data, response, error) in
             guard error == nil else {
                 completion(.error(.badResponse))
                 return

@@ -11,16 +11,23 @@ struct Environment {
     static var shared: Environment?
 
     let chain: Chain
-    let appEngine: AppEngine
     let apiKey: String
+
+    var bearerToken: String {
+        return "Bearer " + apiKey
+    }
 }
 
 enum Chain {
-    case rinkeby
+    case goerli
     case mainnet
-}
 
-enum AppEngine: String {
-    case rinkeby = "api.rinkeby.openbasin.io"
-    case mainnet = "api.openbasin.io"
+    var engine: String {
+        switch self {
+        case .goerli:
+            return "api.goerli.openbasin.io"
+        case .mainnet:
+            return "api.openbasin.io"
+        }
+    }
 }
