@@ -13,6 +13,7 @@ public struct DataModel: DatastoreModel {
     public let provider: String
     public let standard: Int
     public let timestamp: Date
+    public let payloadHash: String
     public let payload: Data
 
     enum CodingKeys: String, CodingKey {
@@ -21,6 +22,7 @@ public struct DataModel: DatastoreModel {
         case provider
         case standard
         case timestamp
+        case payloadHash = "payload_hash"
         case payload
     }
 
@@ -30,31 +32,11 @@ public struct DataModel: DatastoreModel {
         owner = try values.decode(String.self, forKey: .owner)
         provider = try values.decode(String.self, forKey: .provider)
         standard = try values.decode(Int.self, forKey: .standard)
+        payloadHash = try values.decode(String.self, forKey: CodingKeys.payloadHash)
 
         let dateString = try values.decode(String.self, forKey: .timestamp)
         timestamp = try TimestampFactory.shared.date(from: dateString)
 
         payload = try DataDecoder.decodeData(from: decoder, codingKey: CodingKeys.payload)
-    }
-}
-
-struct TimestampFactory {
-
-    static let shared = TimestampFactory()
-
-    var standardFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-
-        return dateFormatter
-    }
-
-    func date(from str: String) throws -> Date {
-        guard let date = standardFormatter.date(from: str) else {
-            throw OBErrorCases.modelMismatch
-        }
-
-        return date
     }
 }
